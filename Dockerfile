@@ -44,15 +44,6 @@ RUN apk add --no-cache \
     conntrack-tools \
     && rm -rf /var/cache/apk/*
 
-# Set setuid for network tools that need elevated privileges
-RUN chmod +s /bin/ping \
-    && chmod +s /usr/bin/traceroute \
-    && chmod +s /usr/bin/mtr
-
-# Create non-root user for security
-RUN adduser -D -s /bin/bash networker \
-    && echo "networker:networker" | chpasswd
-
 # Create entrypoint script
 COPY <<'EOF' /entrypoint.sh
 #!/bin/bash
@@ -73,7 +64,7 @@ echo "  • tcpdump         - Packet capture"
 echo "  • ping, traceroute, mtr  - Latency"
 echo "  • jq, vim         - Utilities"
 echo ""
-echo "Run as user: networker"
+echo "Run as root user"
 echo "=============================================="
 
 # Execute command
@@ -86,8 +77,7 @@ EOF
 
 RUN chmod +x /entrypoint.sh
 
-WORKDIR /home/networker
-USER networker
+WORKDIR /root
 
 ENTRYPOINT ["/entrypoint.sh"]
 CMD ["/bin/bash"]
