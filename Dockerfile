@@ -20,7 +20,7 @@ RUN apk add --no-cache \
     curl \
     wget \
     netcat-openbsd \
-    telnet \
+    busybox-extras \
     bind-tools \
     iputils \
     iproute2 \
