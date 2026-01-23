@@ -47,7 +47,7 @@ RUN apk add --no-cache \
 # Set setuid for network tools that need elevated privileges
 RUN chmod +s /bin/ping \
     && chmod +s /usr/bin/traceroute \
-    && chmod +s /usr/sbin/mtr
+    && chmod +s /usr/bin/mtr
 
 # Create non-root user for security
 RUN adduser -D -s /bin/bash networker \
