@@ -37,7 +37,7 @@ RUN apk add --no-cache \
     vim \
     jq \
     yq \
-    openssh-client \
+    openssh \
     openssl \
     ca-certificates \
     # For K8s networking diagnostics
