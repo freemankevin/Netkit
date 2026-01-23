@@ -1,0 +1,16 @@
+apiVersion: v2
+name: network-tools
+description: Network testing tools container for offline K8s environments
+type: application
+version: 1.0.0
+appVersion: "2.0.0"
+keywords:
+  - network
+  - testing
+  - diagnostics
+  - offline
+  - kubernetes
+home: https://github.com/freemankevin/network-tools
+maintainers:
+  - name: freemankevin
+    email: agent@matrix.example.com

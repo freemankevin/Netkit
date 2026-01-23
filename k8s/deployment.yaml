@@ -1,0 +1,80 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: network-tools
+  labels:
+    app: network-tools
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: network-tools
+  labels:
+    app: network-tools
+rules:
+- apiGroups: [""]
+  resources: ["pods", "services", "endpoints", "nodes"]
+  verbs: ["get", "list", "watch"]
+- apiGroups: [""]
+  resources: ["pods/exec"]
+  verbs: ["create"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: network-tools
+  labels:
+    app: network-tools
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: network-tools
+subjects:
+- kind: ServiceAccount
+  name: network-tools
+  namespace: default
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: network-tools
+  labels:
+    app: network-tools
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: network-tools
+  template:
+    metadata:
+      labels:
+        app: network-tools
+    spec:
+      serviceAccountName: network-tools
+      containers:
+      - name: network-tools
+        image: your-registry/network-tools:latest
+        imagePullPolicy: Never
+
+        env:
+        - name: TARGET_HOST
+          value: "internal-api.example.com"
+
+        command: ["/bin/bash"]
+        args: ["-c", "sleep infinity"]
+
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "100m"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+
+        securityContext:
+          runAsUser: 1000
+          runAsGroup: 1000
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+          capabilities:
+            add: ["NET_ADMIN"]

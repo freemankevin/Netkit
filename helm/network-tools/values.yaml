@@ -1,0 +1,54 @@
+# Default values for network-tools chart
+# For offline environments, configure image.repository to your local registry
+
+replicaCount: 1
+
+image:
+  repository: network-tools
+  tag: latest
+  pullPolicy: Never  # Always use local images in offline environments
+
+# Image pull secrets for private registries
+imagePullSecrets: []
+  # - name: registry-secret
+
+# Service account configuration
+serviceAccount:
+  create: true
+  name: network-tools
+  annotations: {}
+
+# RBAC configuration
+rbac:
+  create: true
+  clusterRole:
+    create: true
+    name: network-tools
+
+# Pod configuration
+pod:
+  annotations: {}
+  labels: {}
+  affinity: {}
+  tolerations: []
+  nodeSelector: {}
+
+# Container configuration
+container:
+  env:
+    - name: TARGET_HOST
+      value: "internal-api.example.com"
+  resources:
+    requests:
+      memory: "128Mi"
+      cpu: "100m"
+    limits:
+      memory: "512Mi"
+      cpu: "500m"
+  securityContext:
+    runAsUser: 1000
+    runAsGroup: 1000
+    allowPrivilegeEscalation: false
+    readOnlyRootFilesystem: true
+    capabilities:
+      add: ["NET_ADMIN"]
