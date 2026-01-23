@@ -20,6 +20,7 @@ RUN apk add --no-cache \
     curl \
     wget \
     netcat-openbsd \
+    telnet \
     bind-tools \
     iputils \
     iproute2 \
@@ -43,6 +44,11 @@ RUN apk add --no-cache \
     conntrack-tools \
     && rm -rf /var/cache/apk/*
 
+# Set setuid for network tools that need elevated privileges
+RUN chmod +s /bin/ping \
+    && chmod +s /usr/bin/traceroute \
+    && chmod +s /usr/sbin/mtr
+
 # Create non-root user for security
 RUN adduser -D -s /bin/bash networker \
     && echo "networker:networker" | chpasswd
@@ -59,6 +65,7 @@ echo ""
 echo "Available tools:"
 echo "  • curl, wget      - HTTP clients"
 echo "  • nc (netcat)     - TCP/HTTP utils"
+echo "  • telnet          - Telnet client"
 echo "  • dig, drill      - DNS queries"
 echo "  • nmap            - Port scanner"
 echo "  • iperf3          - Bandwidth test"
