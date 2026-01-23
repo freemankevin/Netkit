@@ -18,7 +18,7 @@
 | 端口扫描 | nmap |
 | 带宽测试 | iperf3 |
 | 数据包捕获 | tcpdump |
-| 网络诊断 | ping, traceroute, mtr |
+| 网络诊断 | ping, traceroute |
 | 网络工具 | ethtool, ip, conntrack |
 | 实用工具 | jq, yq, vim, bash, openssh |
 
