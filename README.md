@@ -66,11 +66,15 @@ helm install network-tools ./helm/network-tools \
 
 **注意**: 请将 `your-registry` 替换为你的私有镜像仓库地址。
 
-## 🏗 构建流程
+## 🏗 CI/CD 流程
 
 ```
-本地构建 → 推送到私有镜像仓库 → K8s 离线环境拉取运行
+GitHub Push → GitHub Actions 构建 → 推送到 GitHub Container Registry → K8s 拉取运行
+                  ↓
+            安全扫描 (Trivy)
 ```
+
+**注意**: GitHub Actions 会自动为镜像打上 `latest` 标签。
 
 ## 🔒 安全特性
 
