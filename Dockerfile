@@ -40,10 +40,8 @@ RUN apk add --no-cache \
     strace \
     socat \
     whois \
-    arping \
     lsof \
     net-tools \
-    bridge-utils \
     ipvsadm \
     && rm -rf /var/cache/apk/*
 
