@@ -1,7 +1,16 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: network-tools
+  labels:
+    app: network-tools
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: network-tools
+  namespace: network-tools
   labels:
     app: network-tools
 spec:
@@ -13,13 +22,19 @@ spec:
     metadata:
       labels:
         app: network-tools
+      annotations:
+        prometheus.io/scrape: "false"
     spec:
+      serviceAccountName: network-tools
       containers:
       - name: network-tools
         image: ghcr.io/freemankevin/network-tools:latest
         imagePullPolicy: Always
         command: ["/bin/bash"]
         args: ["-c", "sleep infinity"]
+        env:
+        - name: TZ
+          value: "Asia/Shanghai"
         resources:
           requests:
             memory: "128Mi"
@@ -30,20 +45,85 @@ spec:
         securityContext:
           allowPrivilegeEscalation: false
           readOnlyRootFilesystem: false
+          runAsNonRoot: false
+          runAsUser: 0
           capabilities:
-            add: ["NET_ADMIN", "NET_RAW"]
+            add:
+            - NET_ADMIN
+            - NET_RAW
+            - NET_BROADCAST
+            - SYS_PTRACE
+        volumeMounts:
+        - name: tmp
+          mountPath: /tmp
+        - name: var-run
+          mountPath: /var/run
+      volumes:
+      - name: tmp
+        emptyDir: {}
+      - name: var-run
+        emptyDir: {}
+      tolerations:
+      - operator: "Exists"
+        effect: "NoExecute"
+      - operator: "Exists"
+        effect: "NoSchedule"
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: network-tools
+  namespace: network-tools
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: network-tools
+rules:
+- apiGroups: [""]
+  resources:
+  - pods
+  - services
+  - endpoints
+  - nodes
+  - namespaces
+  verbs: ["get", "list", "watch"]
+- apiGroups: ["networking.k8s.io"]
+  resources:
+  - networkpolicies
+  - ingresses
+  verbs: ["get", "list", "watch"]
+- apiGroups: [""]
+  resources:
+  - pods/exec
+  verbs: ["create"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: network-tools
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: network-tools
+subjects:
+- kind: ServiceAccount
+  name: network-tools
+  namespace: network-tools
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: network-tools
+  namespace: network-tools
   labels:
     app: network-tools
 spec:
   type: ClusterIP
   ports:
-  - port: 8523
-    targetPort: 8523
+  - name: iperf3
+    port: 5201
+    targetPort: 5201
     protocol: TCP
   selector:
     app: network-tools

@@ -8,15 +8,12 @@
 
 FROM alpine:3.18
 
-# Metadata
 LABEL maintainer="freemankevin" \
       description="Network testing tools for K8s (nmap, iperf3, tcpdump, etc.)" \
       version="1.0.0" \
       repository="https://github.com/freemankevin/network-tools"
 
-# Install all tools in one layer for smaller image size
 RUN apk add --no-cache \
-    # Core networking tools
     curl \
     wget \
     netcat-openbsd \
@@ -24,15 +21,11 @@ RUN apk add --no-cache \
     bind-tools \
     iputils \
     iproute2 \
-    # Advanced networking & security tools
     nmap \
     tcpdump \
     ethtool \
-    # Performance testing
     iperf3 \
-    # DNS utilities
     drill \
-    # CLI utilities
     bash \
     vim \
     jq \
@@ -40,11 +33,20 @@ RUN apk add --no-cache \
     openssh \
     openssl \
     ca-certificates \
-    # For K8s networking diagnostics
     conntrack-tools \
+    mtr \
+    traceroute \
+    htop \
+    strace \
+    socat \
+    whois \
+    arping \
+    lsof \
+    net-tools \
+    bridge-utils \
+    ipvsadm \
     && rm -rf /var/cache/apk/*
 
-# Create entrypoint script
 COPY <<'EOF' /entrypoint.sh
 #!/bin/bash
 set -e
@@ -56,18 +58,24 @@ echo ""
 echo "Available tools:"
 echo "  • curl, wget      - HTTP clients"
 echo "  • nc (netcat)     - TCP/HTTP utils"
+echo "  • socat           - Advanced relay"
 echo "  • telnet          - Telnet client"
 echo "  • dig, drill      - DNS queries"
 echo "  • nmap            - Port scanner"
 echo "  • iperf3          - Bandwidth test"
 echo "  • tcpdump         - Packet capture"
 echo "  • ping, traceroute, mtr  - Latency"
+echo "  • arping          - ARP diagnostics"
+echo "  • whois           - Domain info"
+echo "  • lsof, htop      - Process monitor"
+echo "  • strace          - Syscall trace"
+echo "  • ip, bridge      - Network config"
+echo "  • ipvsadm         - IPVS admin"
 echo "  • jq, vim         - Utilities"
 echo ""
 echo "Run as root user"
 echo "=============================================="
 
-# Execute command
 if [ $# -gt 0 ]; then
     exec "$@"
 else
