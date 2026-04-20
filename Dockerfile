@@ -2,15 +2,15 @@
 # Netkit - Network Testing Tools Image
 # Base: Alpine Linux (minimal, ~150MB)
 # Build: Local build
-# Run: Offline K8s environments
+# Run: Containerized environments
 # Project: https://github.com/freemankevin/Netkit
 # ============================================================
 
 FROM alpine:3.18
 
 LABEL maintainer="freemankevin" \
-      description="Network testing tools for K8s (nmap, iperf3, tcpdump, etc.)" \
-      version="1.0.0" \
+      description="Network testing tools for containers (nmap, iperf3, tcpdump, etc.)" \
+      version="1.1.0" \
       repository="https://github.com/freemankevin/Netkit"
 
 RUN apk add --no-cache \

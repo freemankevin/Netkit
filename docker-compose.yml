@@ -1,0 +1,33 @@
+version: "3.8"
+
+services:
+  netkit:
+    image: ghcr.io/freemankevin/netkit:latest
+    container_name: netkit
+    hostname: netkit
+    restart: unless-stopped
+    stdin_open: true
+    tty: true
+    command: ["/bin/bash", "-c", "sleep infinity"]
+    environment:
+      - TZ=Asia/Shanghai
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+      - NET_BROADCAST
+      - SYS_PTRACE
+    volumes:
+      - netkit-tmp:/tmp
+      - netkit-run:/var/run
+    ports:
+      - "5201:5201"
+    networks:
+      - netkit-net
+
+networks:
+  netkit-net:
+    driver: bridge
+
+volumes:
+  netkit-tmp:
+  netkit-run:

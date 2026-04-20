@@ -5,7 +5,7 @@
 [![Docker Pulls](https://img.shields.io/badge/ghcr.io-freemankevin%2FNetkit-blue)](https://github.com/freemankevin/Netkit/pkgs/container/Netkit)
 [![License](https://img.shields.io/github/license/freemankevin/Netkit)](LICENSE)
 
-基于 Alpine Linux 的轻量级网络测试工具镜像，专为私有化离线 K8s 容器云环境设计。
+基于 Alpine Linux 的轻量级网络测试工具镜像，专为容器化场景设计。
 
 ## ✨ 特性
 
@@ -13,7 +13,7 @@
 - **多架构**: 支持 linux/amd64, linux/arm64
 - **工具丰富**: 包含 30+ 常用网络测试工具
 - **离线友好**: 专为私有化离线环境设计，无需互联网访问
-- **K8s 优化**: 预置 K8s 网络排查工具
+- **容器化优化**: 预置容器网络排查工具
 
 ## 🛠 内置工具
 
@@ -62,6 +62,22 @@ docker exec -it netkit /bin/bash
 # 执行单条命令
 docker run --rm ghcr.io/freemankevin/netkit:latest curl -I https://google.com
 docker run --rm ghcr.io/freemankevin/netkit:latest nmap -sn 192.168.1.0/24
+```
+
+### Docker Compose 部署
+
+```bash
+# 启动服务
+docker compose up -d
+
+# 查看状态
+docker compose ps
+
+# 进入容器
+docker compose exec netkit /bin/bash
+
+# 停止服务
+docker compose down
 ```
 
 ### K8s 部署
