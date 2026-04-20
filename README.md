@@ -1,9 +1,9 @@
-# Network Testing Tools Container
+# Netkit
 
-[![Build and Push](https://github.com/freemankevin/network-tools/actions/workflows/build.yml/badge.svg)](https://github.com/freemankevin/network-tools/actions/workflows/build.yml)
-[![GitHub release](https://img.shields.io/github/v/release/freemankevin/network-tools?include_prereleases)](https://github.com/freemankevin/network-tools/releases)
-[![Docker Pulls](https://img.shields.io/badge/ghcr.io-freemankevin%2Fnetwork--tools-blue)](https://github.com/freemankevin/network-tools/pkgs/container/network-tools)
-[![License](https://img.shields.io/github/license/freemankevin/network-tools)](LICENSE)
+[![Build and Push](https://github.com/freemankevin/Netkit/actions/workflows/build.yml/badge.svg)](https://github.com/freemankevin/Netkit/actions/workflows/build.yml)
+[![GitHub release](https://img.shields.io/github/v/release/freemankevin/Netkit?include_prereleases)](https://github.com/freemankevin/Netkit/releases)
+[![Docker Pulls](https://img.shields.io/badge/ghcr.io-freemankevin%2FNetkit-blue)](https://github.com/freemankevin/Netkit/pkgs/container/Netkit)
+[![License](https://img.shields.io/github/license/freemankevin/Netkit)](LICENSE)
 
 基于 Alpine Linux 的轻量级网络测试工具镜像，专为私有化离线 K8s 容器云环境设计。
 
@@ -38,30 +38,30 @@
 
 ```bash
 # 拉取镜像
-docker pull ghcr.io/freemankevin/network-tools:latest
+docker pull ghcr.io/freemankevin/netkit:latest
 
 # 运行容器（基础模式）
-docker run -d --name network-tools ghcr.io/freemankevin/network-tools:latest
+docker run -d --name netkit ghcr.io/freemankevin/netkit:latest
 
 # 运行容器（网络诊断模式）
-docker run -d --name network-tools \
+docker run -d --name netkit \
   --cap-add=NET_ADMIN \
   --cap-add=NET_RAW \
-  ghcr.io/freemankevin/network-tools:latest
+  ghcr.io/freemankevin/netkit:latest
 
 # 运行容器（完整网络权限）
-docker run -d --name network-tools \
+docker run -d --name netkit \
   --net=host \
   --cap-add=NET_ADMIN \
   --cap-add=NET_RAW \
-  ghcr.io/freemankevin/network-tools:latest
+  ghcr.io/freemankevin/netkit:latest
 
 # 进入容器
-docker exec -it network-tools /bin/bash
+docker exec -it netkit /bin/bash
 
 # 执行单条命令
-docker run --rm ghcr.io/freemankevin/network-tools:latest curl -I https://google.com
-docker run --rm ghcr.io/freemankevin/network-tools:latest nmap -sn 192.168.1.0/24
+docker run --rm ghcr.io/freemankevin/netkit:latest curl -I https://google.com
+docker run --rm ghcr.io/freemankevin/netkit:latest nmap -sn 192.168.1.0/24
 ```
 
 ### K8s 部署
@@ -71,16 +71,16 @@ docker run --rm ghcr.io/freemankevin/network-tools:latest nmap -sn 192.168.1.0/2
 kubectl apply -f k8s/deployment.yaml
 
 # 查看部署状态
-kubectl get pods -l app=network-tools
-kubectl get svc network-tools
+kubectl get pods -l app=netkit
+kubectl get svc netkit
 
 # 进入容器调试
-kubectl exec -it deploy/network-tools -- /bin/bash
+kubectl exec -it deploy/netkit -- /bin/bash
 
 # 执行单条命令
-kubectl exec deploy/network-tools -- curl -I https://google.com
-kubectl exec deploy/network-tools -- ping -c 4 8.8.8.8
-kubectl exec deploy/network-tools -- nslookup kubernetes.default
+kubectl exec deploy/netkit -- curl -I https://google.com
+kubectl exec deploy/netkit -- ping -c 4 8.8.8.8
+kubectl exec deploy/netkit -- nslookup kubernetes.default
 
 # 删除部署
 kubectl delete -f k8s/deployment.yaml
@@ -90,22 +90,14 @@ kubectl delete -f k8s/deployment.yaml
 
 ```bash
 # 创建临时调试 Pod
-kubectl run network-tools --rm -it --image=ghcr.io/freemankevin/network-tools:latest -- /bin/bash
+kubectl run netkit --rm -it --image=ghcr.io/freemankevin/netkit:latest -- /bin/bash
 
 # 指定命名空间
-kubectl run network-tools --rm -it -n default --image=ghcr.io/freemankevin/network-tools:latest -- /bin/bash
+kubectl run netkit --rm -it -n default --image=ghcr.io/freemankevin/netkit:latest -- /bin/bash
 
 # 使用 host 网络
-kubectl run network-tools --rm -it --overrides='{"spec":{"hostNetwork":true}}' --image=ghcr.io/freemankevin/network-tools:latest -- /bin/bash
+kubectl run netkit --rm -it --overrides='{"spec":{"hostNetwork":true}}' --image=ghcr.io/freemankevin/netkit:latest -- /bin/bash
 ```
-
-## 📦 镜像标签
-
-| 标签 | 说明 |
-|------|------|
-| `latest` | 最新稳定版 |
-| `sha-xxxxxx` | Git 提交 SHA |
-| `v1.0.0` | 版本发布标签 |
 
 ## 🎯 常见使用场景
 

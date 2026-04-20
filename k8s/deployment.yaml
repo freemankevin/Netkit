@@ -2,33 +2,33 @@
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: network-tools
+  name: netkit
   labels:
-    app: network-tools
+    app: netkit
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: network-tools
-  namespace: network-tools
+  name: netkit
+  namespace: netkit
   labels:
-    app: network-tools
+    app: netkit
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: network-tools
+      app: netkit
   template:
     metadata:
       labels:
-        app: network-tools
+        app: netkit
       annotations:
         prometheus.io/scrape: "false"
     spec:
-      serviceAccountName: network-tools
+      serviceAccountName: netkit
       containers:
-      - name: network-tools
-        image: ghcr.io/freemankevin/network-tools:latest
+      - name: netkit
+        image: ghcr.io/freemankevin/netkit:latest
         imagePullPolicy: Always
         command: ["/bin/bash"]
         args: ["-c", "sleep infinity"]
@@ -72,13 +72,13 @@ spec:
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  name: network-tools
-  namespace: network-tools
+  name: netkit
+  namespace: netkit
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  name: network-tools
+  name: netkit
 rules:
 - apiGroups: [""]
   resources:
@@ -101,23 +101,23 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
-  name: network-tools
+  name: netkit
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
-  name: network-tools
+  name: netkit
 subjects:
 - kind: ServiceAccount
-  name: network-tools
-  namespace: network-tools
+  name: netkit
+  namespace: netkit
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: network-tools
-  namespace: network-tools
+  name: netkit
+  namespace: netkit
   labels:
-    app: network-tools
+    app: netkit
 spec:
   type: ClusterIP
   ports:
@@ -126,4 +126,4 @@ spec:
     targetPort: 5201
     protocol: TCP
   selector:
-    app: network-tools
+    app: netkit

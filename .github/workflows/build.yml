@@ -1,12 +1,7 @@
-name: Build and Push Network Tools Image
+name: Build and Push Netkit Image
 
 on:
   push:
-    branches:
-      - main
-    tags:
-      - 'v*'
-  pull_request:
     branches:
       - main
 
@@ -42,15 +37,13 @@ jobs:
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           tags: |
-            type=raw,value=latest,enable=${{ github.ref == 'refs/heads/main' }}
-            type=sha,prefix=
-            type=ref,event=tag
+            type=raw,value=latest
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v5
         with:
           context: .
-          push: ${{ github.event_name != 'pull_request' }}
+          push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
